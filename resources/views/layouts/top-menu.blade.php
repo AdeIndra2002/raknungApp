@@ -1,4 +1,4 @@
-<header class="z-10 py-2 bg-gray-300 dark:bg-gray-800 shadow-md rounded-2xl m-1">
+<header class="z-50 py-2 bg-gray-300 dark:bg-gray-800 shadow-md rounded-2xl m-1">
     <div class="container flex justify-between items-center px-6 mx-auto h-full text-purple-600 md:justify-end">
         <button id="theme-toggle" type="button" class="mr-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none  rounded-lg text-sm p-2.5">
             <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

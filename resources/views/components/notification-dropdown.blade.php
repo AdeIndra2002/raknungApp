@@ -16,7 +16,10 @@
                 <x-dropdown-link :href="url('/pengajuan/' . $notification->data['pengajuan'])">
                     {{ $notification->data['message'] }}
                 </x-dropdown-link>
-
+                @elseif ($notification->type === 'App\Notifications\PengajuanRejected')
+                <x-dropdown-link :href="url('/pengajuan/' . $notification->data['pengajuan'])">
+                    {{ $notification->data['message'] }}
+                </x-dropdown-link>
                 @endif
             </li>
             @empty

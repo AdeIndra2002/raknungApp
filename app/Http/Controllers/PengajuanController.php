@@ -6,7 +6,9 @@ use App\Models\Barang;
 use App\Models\Divisi;
 use App\Models\Pengajuan;
 use App\Models\PengajuanBarang;
+use App\Notifications\PengajuanRejected;
 use App\Notifications\PengajuanVerified;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -144,13 +146,124 @@ class PengajuanController extends Controller
                 ->with('danger', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+    public function rejected(Request $request, string $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Find the report by ID
+            $verif = Pengajuan::findOrFail($id);
+
+            // Update the status and verifier
+            $verif->status = 'Ditolak';
+            $verif->note = $request->note;
+            $verif->verif_by = Auth::user()->id;
+
+            if ($verif->save()) {
+                // Notify the user who assigned the report
+                $user = $verif->assignedBy;
+                if ($user) {
+                    $user->notify(new PengajuanRejected($verif));
+                }
+
+                // Commit the transaction if all operations were successful
+                DB::commit();
+                return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil ditolak');
+            } else {
+                // Rollback if saving the report failed
+                DB::rollBack();
+                return redirect()->route('pengajuan.index')->with('danger', 'Pengajuan gagal ditolak');
+            }
+        } catch (\Exception $e) {
+            // Rollback if an exception occurs
+            DB::rollBack();
+            return redirect()
+                ->route('pengajuan.index')
+                ->with('danger', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $pengajuan = Pengajuan::with('pengajuanBarang')->findOrFail($id);
+        $divisi = Divisi::all();
+        return view('pengajuan.show', compact('pengajuan', 'divisi'));
+    }
+
+    public function cetakWaktu(Request $request)
+    {
+        $query = Pengajuan::query();
+
+        // Filter berdasarkan waktu
+        if ($request->has('tanggal') && $request->has('periode')) {
+            $tanggal = $request->input('tanggal');
+            $periode = $request->input('periode');
+
+            switch ($periode) {
+                case 'hari':
+                    $query->whereDate('tanggal_pengajuan', $tanggal);
+                    break;
+                case 'minggu':
+                    $query->whereBetween('tanggal_pengajuan', [\Carbon\Carbon::parse($tanggal)->startOfWeek(), \Carbon\Carbon::parse($tanggal)->endOfWeek()]);
+                    break;
+                case 'bulan':
+                    $query->whereMonth('tanggal_pengajuan', \Carbon\Carbon::parse($tanggal)->month);
+                    break;
+                case 'tahun':
+                    $query->whereYear('tanggal_pengajuan', \Carbon\Carbon::parse($tanggal)->year);
+                    break;
+            }
+        }
+
+        $pengajuan = $query->orderBy('id', 'desc')->get();
+        $divisi = Divisi::all();
+
+        // Nama file PDF berdasarkan periode
+        $fileName = 'laporan_pengajuan_' . $periode . '.pdf';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pengajuan.lapwaktu', compact('pengajuan', 'divisi'));
+
+        return $pdf->download($fileName);
+    }
+
+    public function generate($id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id); // Mengambil data pengajuan berdasarkan ID
+        $divisi = Divisi::all();
+        $pengajuanBarang = PengajuanBarang::where('pengajuan_id', $pengajuan->id)->get();
+
+        $pdf = PDF::loadView('pengajuan.surat', compact('pengajuan', 'divisi', 'pengajuanBarang'));
+        return $pdf->download('surat_pengajuan_' . $pengajuan->no_surat . '.pdf');
+    }
+
+    public function cetakPengajuan(Request $request)
+    {
+        $pengajuan = Pengajuan::orderBy('id', 'desc')->get();
+        $divisi = Divisi::all();
+        $selected_division = $request->input('selected_division');
+        $divisiId = $request->input('division');
+
+        // Filter pengajuan berdasarkan divisi yang dipilih
+        $pengajuan = Pengajuan::when($divisiId, function ($query, $divisiId) {
+            $query->whereHas('divisi', function ($query) use ($divisiId) {
+                $query->where('id', $divisiId);
+            });
+        })->orderBy('id', 'desc')->get();
+
+        // Tentukan nama divisi yang dipilih atau default ke 'semua divisi'
+        $divisiName = $divisiId ? Divisi::find($divisiId)->nama_divisi : 'semua_divisi';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pengajuan.lapdiv', compact('pengajuan', 'divisi', 'selected_division'));
+
+        // Buat nama file dengan nama divisi yang dipilih
+        $fileName = 'laporan_pengajuan_' . $divisiName . '.pdf';
+
+        return $pdf->download($fileName);
     }
 
     /**

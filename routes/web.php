@@ -45,6 +45,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('pengajuan', PengajuanController::class)->middleware(['role:admin|pimpinan|staff']);
     Route::patch('pengajuan/{pengajuan}/verif', [PengajuanController::class, 'verify'])->name('pengajuan.verif');
+    Route::patch('pengajuan/{pengajuan}/rejected', [PengajuanController::class, 'rejected'])->name('pengajuan.rejected');
+    Route::get('/pengajuan/{id}/generate', [PengajuanController::class, 'generate'])->name('pengajuan.generate');
+    Route::get('/laporanPengajuan', [PengajuanController::class, 'cetakPengajuan'])->name('pengajuan.laporan');
+    Route::get('/laporanWaktu', [PengajuanController::class, 'cetakWaktu'])->name('pengajuan.waktu');
     Route::get('/markAsRead', [DashboardController::class, 'markAsRead'])->name('markAsRead');
 });
 

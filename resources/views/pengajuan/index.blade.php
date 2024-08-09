@@ -4,6 +4,53 @@
     </x-slot>
 
     <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-xs">
+        <div class="flex flex-col relative mb-4 bg-gray-200 shadow-md dark:bg-gray-700 sm:rounded-lg">
+            <h1 class="pt-2 pl-4 text-xl font-semibold text-gray-700 dark:text-gray-400">
+                Cetak Laporan
+            </h1>
+            <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+                <form action="{{ route('pengajuan.laporan') }}" method="GET">
+                    <div class="flex space-x-4">
+                        <!-- Input Label dan Select -->
+                        <div class="flex relative">
+                            <x-input-label for="division" :value="__('Pilih Divisi')" />
+                            <select class="block w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" id="division" name="division">
+                                <option value="">Semua Divisi</option>
+                                @foreach ($divisi as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_divisi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <!-- Button -->
+                        <div>
+                            <button type="submit" id="generate_pdf" name="generate_pdf" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                    <path d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" />
+                                    <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z" clip-rule="evenodd" />
+                                    <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <form action="{{ route('pengajuan.waktu') }}" method="GET">
+                    <div class="flex flex-auto space-x-4">
+
+                        <div id="input-container" class="block w-full">
+                            <!-- Dynamic input will be inserted here -->
+                        </div>
+                        <select id="periode" name="periode" class="block w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" onchange="showInput()">
+                            <option value="hari">Hari</option>
+                            <option value="minggu">Minggu</option>
+                            <option value="bulan">Bulan</option>
+                            <option value="tahun">Tahun</option>
+                        </select>
+
+                        <button type="submit" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">Cetak</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <!-- Start coding here -->
         <div class="relative mb-4 bg-gray-200 shadow-md dark:bg-gray-700 sm:rounded-lg">
             <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
@@ -21,13 +68,13 @@
                     </form>
                 </div>
                 <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-                    <button type="button" class="flex px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
-                        <svg class="h-3.5 w-3.5 mt-1 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                        </svg>
-                        <a href="{{ route('pengajuan.create') }}">Tambah Data</a>
-                    </button>
                     <div class="flex items-center w-full space-x-3 md:w-auto">
+                        <button type="button" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
+                            <svg class="h-3.5 w-3.5 mt-1 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                            </svg>
+                            <a href="{{ route('pengajuan.create') }}">Tambah Data</a>
+                        </button>
                         <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                             <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
@@ -143,7 +190,7 @@
                                         </svg>
                                     </a>
                                     <!-- Modal Trigger -->
-                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-barang-deletion-{{ $data->id }}')" class="flex items-center px-2 py-2 text-sm font-medium text-red-700 bg-white-700 rounded-lg dark:text-gray-500 hover:dark:text-red-700 focus:outline-none focus:shadow-outline-gray">
+                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-pengajuan-deletion-{{ $data->id }}')" class="flex items-center px-2 py-2 text-sm font-medium text-red-700 bg-white-700 rounded-lg dark:text-gray-500 hover:dark:text-red-700 focus:outline-none focus:shadow-outline-gray">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                         </svg>
@@ -170,45 +217,66 @@
                                         </form>
                                     </x-modal>
 
-                                    <div x-data="{ openVerify: false }" class="inline">
-                                        <!-- VERIFY Trigger -->
-                                        @can('view_dashboard')
-                                        <button @click="openVerify = true" class="flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
-                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917L9.724 16.5 19 7.5" />
-                                            </svg>
-                                        </button>
-                                        @endcan
-
-                                        <!-- Verify Modal -->
-                                        <div x-show="openVerify" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center">
-                                            <div x-show="openVerify" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 transform translate-y-1/2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-1/2" @click.away="openVerify = false" @keydown.escape="openVerify = false" class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
-                                                <!-- Modal body -->
-                                                <div class="mt-4 mb-6">
-                                                    <!-- Modal title -->
-                                                    <p class="mb-2 text-lg font-semibold text-gray-700">
-                                                        Confirm Verification
-                                                    </p>
-                                                    <!-- Modal description -->
-                                                    <p class="text-sm text-gray-700">
-                                                        Are you sure you want to verify <span class="font-semibold">{{ $data->nama_pengaju }}</span> ?
-                                                    </p>
-                                                </div>
-                                                <footer class="flex flex-col items-center justify-end space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row">
-                                                    <button @click="openVerify = false" class="w-full px-5 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
-                                                        Cancel
-                                                    </button>
-                                                    <form action="{{ route('pengajuan.verif', $data->id) }}" method="POST" class="inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
-                                                            Verify
-                                                        </button>
-                                                    </form>
-                                                </footer>
+                                    <!-- Modal Trigger Verify -->
+                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-pengajuan-vefiry-{{ $data->id }}')" class="flex items-center px-2 py-2 text-sm font-medium text-green-700 bg-white-700 rounded-lg dark:text-gray-500 hover:dark:text-green-700 focus:outline-none focus:shadow-outline-gray">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                            <path fill-rule="evenodd" d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5Zm6.61 10.936a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                                            <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                                        </svg>
+                                    </button>
+                                    <!-- Modal Verify -->
+                                    <x-modal name="confirm-pengajuan-vefiry-{{ $data->id }}" focusable>
+                                        <form method="post" action="{{ route('pengajuan.verif', $data->id) }}" class="p-6">
+                                            @csrf
+                                            @method('PATCH')
+                                            <h2 class="text-lg font-medium text-gray-400">
+                                                {{ __('Setujui Pengajuan') }}
+                                            </h2>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                {{ __('Sekali anda menyetujui, maka "STATUS" pada data akan berubah jadi "Diterima". Silahkan klik tombol "Setujui" untuk Menyetujui pengajuan.') }}
+                                            </p>
+                                            <div class="mt-6 flex justify-end">
+                                                <x-secondary-button x-on:click="$dispatch('close')">
+                                                    {{ __('Kembali') }}
+                                                </x-secondary-button>
+                                                <x-primary-button class="ms-3">
+                                                    {{ __('Setujui') }}
+                                                </x-primary-button>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </form>
+                                    </x-modal>
+
+                                    <!-- Modal Trigger Rejected -->
+                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-pengajuan-rejected-{{ $data->id }}')" class="flex items-center px-2 py-2 text-sm font-medium text-red-700 bg-white-700 rounded-lg dark:text-gray-500 hover:dark:text-red-700 focus:outline-none focus:shadow-outline-gray">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <!-- Modal Rejected -->
+                                    <x-modal name="confirm-pengajuan-rejected-{{ $data->id }}" focusable>
+                                        <form method="post" action="{{ route('pengajuan.rejected', $data->id) }}" class="p-6">
+                                            @csrf
+                                            @method('PATCH')
+                                            <h2 class="text-lg font-medium text-gray-400">
+                                                {{ __('Tolak Pengajuan') }}
+                                            </h2>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                {{ __('Sekali anda menolak, maka "STATUS" pada data akan berubah jadi "Ditolak". Silahkan klik tombol "Tolak" untuk Menolak pengajuan.') }}
+                                            </p>
+                                            <div class="my-4">
+                                                <label for="note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your note</label>
+                                                <textarea id="note" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tuliskan alasan anda..." name="note"></textarea>
+                                            </div>
+                                            <div class="mt-6 flex justify-end">
+                                                <x-secondary-button x-on:click="$dispatch('close')">
+                                                    {{ __('Kembali') }}
+                                                </x-secondary-button>
+                                                <x-primary-button class="ms-3">
+                                                    {{ __('Tolak') }}
+                                                </x-primary-button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
                                 </div>
                             </td>
                         </tr>
@@ -229,4 +297,32 @@
         </div>
 
     </div>
+    <script>
+        function showInput() {
+            const periode = document.getElementById('periode').value;
+            const container = document.getElementById('input-container');
+            container.innerHTML = ''; // Clear previous input
+
+            let inputElement = '';
+
+            if (periode === 'hari') {
+                inputElement = `<input type="date" name="tanggal" class="flex block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">`;
+            } else if (periode === 'minggu') {
+                inputElement = `<input type="week" name="minggu" class="flex block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">`;
+            } else if (periode === 'bulan') {
+                inputElement = `<input type="month" name="bulan" class="flex block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">`;
+            } else if (periode === 'tahun') {
+                inputElement = `<input type="number" name="tahun" min="1900" max="2099" step="1" value="{{ now()->year }}" class="flex block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">`;
+            }
+
+            container.innerHTML = inputElement;
+        }
+
+        // Initialize the input field based on the default selected option
+        document.addEventListener('DOMContentLoaded', function() {
+            showInput();
+        });
+
+    </script>
+
 </x-app-layout>

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PengajuanVerified extends Notification
+class PengajuanRejected extends Notification
 {
     use Queueable;
 
@@ -37,17 +37,16 @@ class PengajuanVerified extends Notification
     // public function toMail(object $notifiable): MailMessage
     // {
     //     return (new MailMessage)
-    //         ->line('The introduction to the notification.')
-    //         ->action('Notification Action', url('/'))
-    //         ->line('Thank you for using our application!');
+    //                 ->line('The introduction to the notification.')
+    //                 ->action('Notification Action', url('/'))
+    //                 ->line('Thank you for using our application!');
     // }
-
-
     public function toDatabase(object $notifiable): array
     {
         return [
             'pengajuan' => $this->pengajuan->id,
-            'message' => 'Pengajuan ' . $this->pengajuan->nama_pengaju . ' Telah Terverifikasi',
+            'note' => $this->pengajuan->note,
+            'message' => 'Pengajuan ' . $this->pengajuan->nama_pengaju . ' Ditolak',
         ];
     }
     /**
@@ -59,7 +58,8 @@ class PengajuanVerified extends Notification
     {
         return [
             'pengajuan' => $this->pengajuan->id,
-            'message' => 'Pengajuan ' . $this->pengajuan->nama_pengaju . ' Telah Terverifikasi',
+            'note' => $this->pengajuan->note,
+            'message' => 'Pengajuan ' . $this->pengajuan->nama_pengaju . ' Ditolak',
         ];
     }
 }
