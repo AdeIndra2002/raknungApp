@@ -355,29 +355,6 @@ class PengajuanController extends Controller
     }
 
 
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-
-        // Ambil data sesuai query
-        $results = Pengajuan::where('nama_pengajuan', 'like', "%{$query}%")
-            ->orWhereHas('divisi', function ($q) use ($query) {
-                $q->where('nama_divisi', 'like', "%{$query}%");
-            })
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'nama_pengajuan' => $item->nama_pengajuan,
-                    'tanggal_pengajuan' => $item->tanggal_pengajuan,
-                    'status' => $item->status,
-                    'divisi' => $item->divisi, // assuming divisi relationship exists
-                ];
-            });
-
-        return response()->json($results);
-    }
-
     /**
      * Remove the specified resource from storage.
      */

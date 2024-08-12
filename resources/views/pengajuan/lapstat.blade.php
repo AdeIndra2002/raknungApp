@@ -92,7 +92,7 @@
         </div>
 
         <h1 style="text-align: center;">LAPORAN PENGADAAN
-            @if ($selected_status == 'Disetujui')
+            @if ($selected_status == 'Diterima')
             DITERIMA
             @elseif ($selected_status == 'Ditolak')
             DITOLAK
