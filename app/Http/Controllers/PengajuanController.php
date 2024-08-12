@@ -202,18 +202,23 @@ class PengajuanController extends Controller
             $tanggal = $request->input('tanggal');
             $periode = $request->input('periode');
 
+            $tanggal = \Carbon\Carbon::parse($tanggal);
+
             switch ($periode) {
                 case 'hari':
-                    $query->whereDate('tanggal_pengajuan', $tanggal);
+                    $query->whereDate('tanggal_pengajuan', $tanggal->format('Y-m-d'));
                     break;
                 case 'minggu':
-                    $query->whereBetween('tanggal_pengajuan', [\Carbon\Carbon::parse($tanggal)->startOfWeek(), \Carbon\Carbon::parse($tanggal)->endOfWeek()]);
+                    $startOfWeek = $tanggal->startOfWeek()->format('Y-m-d');
+                    $endOfWeek = $tanggal->endOfWeek()->format('Y-m-d');
+                    $query->whereBetween('tanggal_pengajuan', [$startOfWeek, $endOfWeek]);
                     break;
                 case 'bulan':
-                    $query->whereMonth('tanggal_pengajuan', \Carbon\Carbon::parse($tanggal)->month);
+                    $query->whereMonth('tanggal_pengajuan', $tanggal->month)
+                        ->whereYear('tanggal_pengajuan', $tanggal->year);
                     break;
                 case 'tahun':
-                    $query->whereYear('tanggal_pengajuan', \Carbon\Carbon::parse($tanggal)->year);
+                    $query->whereYear('tanggal_pengajuan', $tanggal->year);
                     break;
             }
         }
@@ -222,13 +227,15 @@ class PengajuanController extends Controller
         $divisi = Divisi::all();
 
         // Nama file PDF berdasarkan periode
-        $fileName = 'laporan_pengajuan_' . $periode . '.pdf';
+        $fileName = 'laporan_pengajuan_' . $request->input('periode') . '.pdf';
 
         // Generate PDF
         $pdf = Pdf::loadView('pengajuan.lapwaktu', compact('pengajuan', 'divisi'));
 
         return $pdf->download($fileName);
     }
+
+
 
     public function generate($id)
     {
@@ -265,6 +272,28 @@ class PengajuanController extends Controller
 
         return $pdf->download($fileName);
     }
+
+    public function cetakStatus(Request $request)
+    {
+        $selected_status = $request->input('status');
+
+        // Filter pengajuan berdasarkan status yang dipilih
+        $pengajuan = Pengajuan::when($selected_status, function ($query, $selected_status) {
+            $query->where('status', $selected_status);
+        })->orderBy('id', 'desc')->get();
+
+        // Tentukan nama status yang dipilih atau default ke 'semua_status'
+        $statusNamae = $selected_status ? $selected_status : 'semua_status';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pengajuan.lapstat', compact('pengajuan', 'selected_status'));
+
+        // Buat nama file dengan nama status yang dipilih
+        $fileName = 'laporan_pengajuan_' . $statusNamae . '.pdf';
+
+        return $pdf->download($fileName);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -326,6 +355,28 @@ class PengajuanController extends Controller
     }
 
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        // Ambil data sesuai query
+        $results = Pengajuan::where('nama_pengajuan', 'like', "%{$query}%")
+            ->orWhereHas('divisi', function ($q) use ($query) {
+                $q->where('nama_divisi', 'like', "%{$query}%");
+            })
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'nama_pengajuan' => $item->nama_pengajuan,
+                    'tanggal_pengajuan' => $item->tanggal_pengajuan,
+                    'status' => $item->status,
+                    'divisi' => $item->divisi, // assuming divisi relationship exists
+                ];
+            });
+
+        return response()->json($results);
+    }
 
     /**
      * Remove the specified resource from storage.

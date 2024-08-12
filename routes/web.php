@@ -48,7 +48,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('pengajuan/{pengajuan}/rejected', [PengajuanController::class, 'rejected'])->name('pengajuan.rejected');
     Route::get('/pengajuan/{id}/generate', [PengajuanController::class, 'generate'])->name('pengajuan.generate');
     Route::get('/laporanPengajuan', [PengajuanController::class, 'cetakPengajuan'])->name('pengajuan.laporan');
+    Route::get('/laporanStatus', [PengajuanController::class, 'cetakStatus'])->name('pengajuan.status');
     Route::get('/laporanWaktu', [PengajuanController::class, 'cetakWaktu'])->name('pengajuan.waktu');
+    Route::get('/search', [PengajuanController::class, 'search'])->name('pengajuan.search');
+
+
     Route::get('/markAsRead', [DashboardController::class, 'markAsRead'])->name('markAsRead');
 });
 
