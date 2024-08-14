@@ -232,7 +232,7 @@ class PengajuanController extends Controller
         // Generate PDF
         $pdf = Pdf::loadView('pengajuan.lapwaktu', compact('pengajuan', 'divisi'));
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 
 
@@ -244,7 +244,7 @@ class PengajuanController extends Controller
         $pengajuanBarang = PengajuanBarang::where('pengajuan_id', $pengajuan->id)->get();
 
         $pdf = PDF::loadView('pengajuan.surat', compact('pengajuan', 'divisi', 'pengajuanBarang'));
-        return $pdf->download('surat_pengajuan_' . $pengajuan->no_surat . '.pdf');
+        return $pdf->stream('surat_pengajuan_' . $pengajuan->no_surat . '.pdf');
     }
 
     public function cetakPengajuan(Request $request)
@@ -270,7 +270,7 @@ class PengajuanController extends Controller
         // Buat nama file dengan nama divisi yang dipilih
         $fileName = 'laporan_pengajuan_' . $divisiName . '.pdf';
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 
     public function cetakStatus(Request $request)
@@ -291,7 +291,7 @@ class PengajuanController extends Controller
         // Buat nama file dengan nama status yang dipilih
         $fileName = 'laporan_pengajuan_' . $statusNamae . '.pdf';
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 
 
@@ -360,6 +360,8 @@ class PengajuanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pengajuan = Pengajuan::find($id);
+        $pengajuan->delete();
+        return redirect()->route('pengajuan.index', compact('pengajuan'))->with('success', 'Data Pengajuan berhasil di hapus.');
     }
 }

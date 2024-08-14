@@ -40,4 +40,9 @@ class Pengajuan extends Model
     {
         return $this->hasMany(PengajuanBarang::class);
     }
+
+    public function Pembelian()
+    {
+        return $this->hasMany(Pembelian::class);
+    }
 }

@@ -13,4 +13,9 @@ class Supplier extends Model
         'nama_supplier',
         'no_hp',
     ];
+
+    public function GambarPembelian()
+    {
+        return $this->hasMany(GambarPembelian::class, 'gambar_pembelian_supplier');
+    }
 }

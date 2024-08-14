@@ -54,4 +54,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pengajuan::class, 'verif_by');
     }
+    public function pembelianVerifiedBy()
+    {
+        return $this->hasMany(Pembelian::class, 'verif_by');
+    }
 }

@@ -3,7 +3,9 @@
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\GambarController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -50,8 +52,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporanPengajuan', [PengajuanController::class, 'cetakPengajuan'])->name('pengajuan.laporan');
     Route::get('/laporanStatus', [PengajuanController::class, 'cetakStatus'])->name('pengajuan.status');
     Route::get('/laporanWaktu', [PengajuanController::class, 'cetakWaktu'])->name('pengajuan.waktu');
-    Route::get('/search', [PengajuanController::class, 'search'])->name('pengajuan.search');
 
+    Route::resource('pembelian', PembelianController::class)->middleware(['role:admin|pimpinan|staff']);
+    Route::get('/pembelians/{id}/hapus-gambar', [GambarController::class, 'index'])->name('pembelians.hapusGambar');
+    Route::delete('/gambar/{id}', [GambarController::class, 'destroy'])->name('gambar.destroy');
+    Route::patch('pembelian/{pembelian}/verif', [PembelianController::class, 'verify'])->name('pembelian.verif');
+    Route::patch('pembelian/{pembelian}/rejected', [PembelianController::class, 'rejected'])->name('pembelian.rejected');
+    Route::get('/pembelian/{id}/generate', [PembelianController::class, 'generate'])->name('pembelian.generate');
 
     Route::get('/markAsRead', [DashboardController::class, 'markAsRead'])->name('markAsRead');
 });
