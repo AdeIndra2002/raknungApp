@@ -25,6 +25,15 @@
                         <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
                     </div>
                 </div>
+                <div class="mt-4 relative">
+                    <div class="relative">
+                        <x-text-input placeholder=" " type="text" id="alamat" name="alamat" class="block w-full" value="{{ $supplier->alamat }}" required autofocus />
+                        <x-input-label for="alamat" :value="__('Alamat')" />
+                    </div>
+                    <div class="relative">
+                        <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
+                    </div>
+                </div>
 
                 <div class="mt-4 card-footer">
                     <button type="submit" class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Tambah Data</button>

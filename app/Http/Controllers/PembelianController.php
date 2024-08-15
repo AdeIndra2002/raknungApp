@@ -27,7 +27,108 @@ class PembelianController extends Controller
         $pembelian = Pembelian::orderBy('id', 'desc')->paginate(5);
         $pengajuan = Pengajuan::all();
         $divisi = Divisi::all();
-        return view('pembelian.index', compact('pembelian', 'pengajuan'));
+        return view('pembelian.index', compact('pembelian', 'pengajuan', 'divisi'));
+    }
+
+    public function cetakPembelian(Request $request)
+    {
+        // Retrieve inputs
+        $selected_status = $request->input('status');
+        $divisiId = $request->input('division');
+
+        // Filter Pembelian based on selected status
+        $pembelianQuery = Pembelian::query();
+
+        if ($selected_status) {
+            $pembelianQuery->where('status', $selected_status);
+        }
+
+        // Get Pembelian IDs that are associated with the selected divisiId through Pengajuan
+        if ($divisiId) {
+            $pengajuanIds = Pengajuan::where('divisi_id', $divisiId)->pluck('id');
+            $pembelianQuery->whereIn('pengajuan_id', $pengajuanIds);
+        }
+
+        // Get Pembelian records
+        $pembelian = $pembelianQuery->orderBy('id', 'desc')->get();
+
+        // Get all divisi for the view
+        $divisi = Divisi::all();
+
+        // Determine divisi name or default to 'semua divisi'
+        $divisiName = $divisiId ? Divisi::find($divisiId)->nama_divisi : 'semua divisi';
+        $statusNamae = $selected_status ? $selected_status : 'semua status';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pembelian.lapdiv', compact('pembelian', 'divisi', 'selected_status', 'divisiId', 'divisiName', 'statusNamae'));
+
+        // Create file name with selected divisi and status
+        $fileName = 'laporan_pembelian_' . $divisiName . '_' . $statusNamae . '.pdf';
+
+        return $pdf->stream($fileName);
+    }
+
+    public function cetakWaktu(Request $request)
+    {
+        $query = Pembelian::query();
+
+        // Filter berdasarkan waktu
+        if ($request->has('tanggal') && $request->has('periode')) {
+            $tanggal = $request->input('tanggal');
+            $periode = $request->input('periode');
+
+            $tanggal = \Carbon\Carbon::parse($tanggal);
+
+            switch ($periode) {
+                case 'hari':
+                    $query->whereDate('created_at', $tanggal->format('Y-m-d'));
+                    break;
+                case 'minggu':
+                    $startOfWeek = $tanggal->startOfWeek()->format('Y-m-d');
+                    $endOfWeek = $tanggal->endOfWeek()->format('Y-m-d');
+                    $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                    break;
+                case 'bulan':
+                    $query->whereMonth('created_at', $tanggal->month)
+                        ->whereYear('created_at', $tanggal->year);
+                    break;
+                case 'tahun':
+                    $query->whereYear('created_at', $tanggal->year);
+                    break;
+            }
+        }
+
+        $pembelian = $query->orderBy('id', 'desc')->get();
+        $divisi = Divisi::all();
+
+        // Nama file PDF berdasarkan periode
+        $fileName = 'laporan_pembelian_' . $request->input('periode') . '.pdf';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pembelian.lapwaktu', compact('pembelian', 'divisi', 'fileName', 'periode'));
+
+        return $pdf->stream($fileName);
+    }
+
+    public function cetakStatus(Request $request)
+    {
+        $selected_status = $request->input('status');
+
+        // Filter pengajuan berdasarkan status yang dipilih
+        $pembelian = Pembelian::when($selected_status, function ($query, $selected_status) {
+            $query->where('status', $selected_status);
+        })->orderBy('id', 'desc')->get();
+
+        // Tentukan nama status yang dipilih atau default ke 'semua_status'
+        $statusNamae = $selected_status ? $selected_status : 'semua_status';
+
+        // Generate PDF
+
+        // Buat nama file dengan nama status yang dipilih
+        $fileName = 'laporan_pembelian_' . $statusNamae . '.pdf';
+        $pdf = Pdf::loadView('pembelian.lapstat', compact('pembelian', 'selected_status', 'fileName'));
+
+        return $pdf->stream($fileName);
     }
 
     /**
@@ -158,22 +259,18 @@ class PembelianController extends Controller
         }
     }
 
-    public function generate($id)
-    {
-        $pembelian = Pembelian::findOrFail($id); // Mengambil data pengajuan berdasarkan ID
-        $pengajuan = Divisi::all();
-        $gambarpembelian = GambarPembelian::where('pembelian_id', $pembelian->id)->get();
 
-        $pdf = Pdf::loadView('pembelian.surat', compact('pembelian', 'pengajuan', 'gambarpembelian'));
-        return $pdf->download('surat_pembelian_' . $pembelian->pengajuan->nama_pengaju . '.pdf');
-    }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $pembelian = Pembelian::with('GambarPembelian')->findOrFail($id);
+        $pengajuan  = Pengajuan::all();
+        $supplier = Supplier::all();
+
+        return view('pembelian.show', compact('pembelian', 'pengajuan', 'supplier'));
     }
 
     /**
@@ -188,7 +285,6 @@ class PembelianController extends Controller
         $pembelian = Pembelian::with('GambarPembelian')->findOrFail($id);
         $pengajuans = Pengajuan::all();
         $suppliers = Supplier::all();
-
         return view('pembelian.edit', compact('pembelian', 'pengajuans', 'suppliers'));
     }
 

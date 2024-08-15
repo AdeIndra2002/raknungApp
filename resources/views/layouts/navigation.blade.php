@@ -19,7 +19,7 @@
 
             @can('view_user')
             <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
+                <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.*')">
                     <x-slot name="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-3">
                             <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
@@ -31,7 +31,7 @@
             </li>
             @endcan
             <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('divisi.index') }}" :active="request()->routeIs('divisi.index')">
+                <x-nav-link href="{{ route('divisi.index') }}" :active="request()->routeIs('divisi.*')">
                     <x-slot name="icon">
                         <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
@@ -41,7 +41,17 @@
                 </x-nav-link>
             </li>
             <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('kategori.index') }}" :active="request()->routeIs('kategori.index')">
+                <x-nav-link href="{{ route('barang.index') }}" :active="request()->routeIs('barang.*')">
+                    <x-slot name="icon">
+                        <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                        {{ __('Barang') }}
+                    </x-slot>
+                </x-nav-link>
+            </li>
+            <li class="relative px-6 py-3">
+                <x-nav-link href="{{ route('kategori.index') }}" :active="request()->routeIs('kategori.*')">
                     <x-slot name="icon">
                         <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
@@ -51,27 +61,17 @@
                 </x-nav-link>
             </li>
             <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('barang.index') }}" :active="request()->routeIs('barang.index')">
+                <x-nav-link href="{{ route('supplier.index') }}" :active="request()->routeIs('supplier.*')">
                     <x-slot name="icon">
                         <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
                         </svg>
-                        {{ __('barang') }}
+                        {{ __('Supplier') }}
                     </x-slot>
                 </x-nav-link>
             </li>
             <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('supplier.index') }}" :active="request()->routeIs('supplier.index')">
-                    <x-slot name="icon">
-                        <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
-                        </svg>
-                        {{ __('supplier') }}
-                    </x-slot>
-                </x-nav-link>
-            </li>
-            <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('pengajuan.index') }}" :active="request()->routeIs('pengajuan.index')">
+                <x-nav-link href="{{ route('pengajuan.index') }}" :active="request()->routeIs('pengajuan.*')">
                     <x-slot name="icon">
                         <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
@@ -81,7 +81,7 @@
                 </x-nav-link>
             </li>
             <li class="relative px-6 py-3">
-                <x-nav-link href="{{ route('pembelian.index') }}" :active="request()->routeIs('pembelian.index')">
+                <x-nav-link href="{{ route('pembelian.index') }}" :active="request()->routeIs('pembelian.*')">
                     <x-slot name="icon">
                         <svg class="w-5 h-5 mr-3" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>

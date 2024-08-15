@@ -9,16 +9,27 @@
                 Cetak Laporan
             </h1>
             <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                <form action="{{ route('pengajuan.laporan') }}" method="GET">
+                <form action="{{ route('pembelian.laporan') }}" method="GET">
                     <p class="pb-2 text-sm font-semibold text-gray-700 dark:text-gray-400">Cetak Laporan Berdasarkan Divisi</p>
                     <div class="flex space-x-4">
                         <!-- Input Label dan Select -->
+                        <!-- Division Select -->
                         <div class="flex relative">
                             <select class="block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" id="division" name="division">
                                 <option value="">Semua Divisi</option>
-                                {{-- @foreach ($divisi as $item) --}}
-                                {{-- <option value="{{ $item->id }}">{{ $item->nama_divisi }}</option> --}}
-                                {{-- @endforeach --}}
+                                @foreach ($divisi as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_divisi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Status Select -->
+                        <div class="flex relative">
+                            <select class="block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" id="status" name="status">
+                                <option value="">Semua Status</option>
+                                <option value="Selesai">Selesai</option>
+                                <option value="Gagal">Gagal</option>
+                                <option value="Proses">Proses</option>
                             </select>
                         </div>
                         <!-- Button -->
@@ -33,48 +44,51 @@
                         </div>
                     </div>
                 </form>
-                <form action="{{ route('pengajuan.waktu') }}" method="GET">
-                    <p class="pb-2 text-sm font-semibold text-gray-700 dark:text-gray-400">Cetak Laporan Berdasarkan Waktu</p>
-                    <div class="flex space-x-4">
 
-                        <select id="periode" name="periode" class="block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" onchange="showInput()">
-                            <option value="hari">Hari</option>
-                            <option value="minggu">Minggu</option>
-                            <option value="bulan">Bulan</option>
-                            <option value="tahun">Tahun</option>
-                        </select>
-
-                        <div id="input-container" class="block w-full">
-                            <!-- Dynamic input will be inserted here -->
-                        </div>
-
-                        <button type="submit" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">Cetak</button>
-                    </div>
-                </form>
 
             </div>
             <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                <form action="{{ route('pengajuan.status') }}" method="GET">
-                    <p class="pb-2 text-sm font-semibold text-gray-700 dark:text-gray-400">Cetak Laporan Berdasarkan Status</p>
-                    <div class="relative flex space-x-4">
-                        <div class="flex relative">
-                            <div class="flex relative">
-                                <select id="status" name="status" class="block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                                    <option value="Pending">Pending</option>
-                                    <option value="Diterima">Diterima</option>
-                                    <option value="Ditolak">Ditolak</option>
-                                </select>
+                <div class="flex space-x-4">
+                    <form action="{{ route('pembelian.waktu') }}" method="GET">
+                        <p class="pb-2 text-sm font-semibold text-gray-700 dark:text-gray-400">Cetak Laporan Berdasarkan Waktu</p>
+                        <div class="flex space-x-4">
+
+                            <select id="periode" name="periode" class="block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" onchange="showInput()">
+                                <option value="hari">Hari</option>
+                                <option value="minggu">Minggu</option>
+                                <option value="bulan">Bulan</option>
+                                <option value="tahun">Tahun</option>
+                            </select>
+
+                            <div id="input-container" class="block w-full">
+                                <!-- Dynamic input will be inserted here -->
                             </div>
+
+                            <button type="submit" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">Cetak</button>
                         </div>
-                        <button type="submit" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                <path d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" />
-                                <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z" clip-rule="evenodd" />
-                                <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
-                            </svg>
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                    <form action="{{ route('pembelian.status') }}" method="GET">
+                        <p class="pb-2 text-sm font-semibold text-gray-700 dark:text-gray-400">Cetak Laporan Berdasarkan Status</p>
+                        <div class="relative flex space-x-4">
+                            <div class="flex relative">
+                                <div class="flex relative">
+                                    <select id="status" name="status" class="block w-max text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 dark:bg-gray-800 appearance-none dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                        <option value="Proses">Proses</option>
+                                        <option value="Selesai">Selesai</option>
+                                        <option value="Gagal">Gagal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="flex items-center justify-center w-full px-4 py-2 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                    <path d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" />
+                                    <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z" clip-rule="evenodd" />
+                                    <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
         <!-- Start coding here -->
@@ -101,6 +115,7 @@
                             <th class="px-4 py-3">No</th>
                             <th class="px-4 py-3">Nama & Divisi Pengaju</th>
                             <th class="px-4 py-3">Total Harga</th>
+                            <th class="px-4 py-3">Waktu Pembelian</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Action</th>
                         </tr>
@@ -112,6 +127,7 @@
                             <td class="px-4 py-3">{{ $loop->iteration }}</td>
                             <td class="px-4 py-3">{{ $data->pengajuan->nama_pengaju }} - {{ $data->pengajuan->divisi->nama_divisi }}</td>
                             <td class="px-4 py-3">{{ $data->total_harga }}</td>
+                            <td class="px-4 py-3">{{ $data->created_at }}</td>
                             <td class="px-4 py-3">
                                 @if ($data->status == 'Selesai')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white">

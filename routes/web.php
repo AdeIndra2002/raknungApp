@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('pembelian/{pembelian}/verif', [PembelianController::class, 'verify'])->name('pembelian.verif');
     Route::patch('pembelian/{pembelian}/rejected', [PembelianController::class, 'rejected'])->name('pembelian.rejected');
     Route::get('/pembelian/{id}/generate', [PembelianController::class, 'generate'])->name('pembelian.generate');
+    Route::get('/laporanPembelian', [PembelianController::class, 'cetakPembelian'])->name('pembelian.laporan');
+    Route::get('/laporanStatusPembelian', [PembelianController::class, 'cetakStatus'])->name('pembelian.status');
+    Route::get('/laporanWaktuPembelian', [PembelianController::class, 'cetakWaktu'])->name('pembelian.waktu');
 
     Route::get('/markAsRead', [DashboardController::class, 'markAsRead'])->name('markAsRead');
 });
