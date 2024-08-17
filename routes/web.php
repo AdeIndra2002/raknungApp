@@ -6,6 +6,7 @@ use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\GambarController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -34,11 +35,11 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::view('about', 'about')->name('about')->middleware(['role:admin|staff']);
 
-    Route::get('users', [UserController::class, 'index'])->name('users.index')->middleware(['role:admin']);
+    Route::get('users', [UserController::class, 'index'])->name('users.index')->middleware(['role:admin|pimpinan']);
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(['role:admin']);
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware(['role:admin']);
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware(['role:admin']);
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(['role:admin|pimpinan']);
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware(['role:admin|pimpinan']);
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware(['role:admin|pimpinan']);
 
     Route::resource('divisi', DivisiController::class)->middleware(['role:admin']);
     Route::resource('barang', BarangController::class)->middleware(['role:admin']);
@@ -62,6 +63,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporanPembelian', [PembelianController::class, 'cetakPembelian'])->name('pembelian.laporan');
     Route::get('/laporanStatusPembelian', [PembelianController::class, 'cetakStatus'])->name('pembelian.status');
     Route::get('/laporanWaktuPembelian', [PembelianController::class, 'cetakWaktu'])->name('pembelian.waktu');
+
+    Route::resource('penerimaan', PenerimaanController::class)->middleware(['role:admin|pimpinan|staff']);
+    Route::get('/penerimaan/{id}/generate', [PenerimaanController::class, 'generate'])->name('penerimaan.generate');
+    Route::get('/cetakSemu', [PenerimaanController::class, 'cetakSemu'])->name('penerimaan.cetakSemu');
+
+
 
     Route::get('/markAsRead', [DashboardController::class, 'markAsRead'])->name('markAsRead');
 });

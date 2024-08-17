@@ -283,7 +283,7 @@ class PembelianController extends Controller
     public function edit(string $id)
     {
         $pembelian = Pembelian::with('GambarPembelian')->findOrFail($id);
-        $pengajuans = Pengajuan::all();
+        $pengajuans = Pengajuan::where('status', 'Diterima')->get();
         $suppliers = Supplier::all();
         return view('pembelian.edit', compact('pembelian', 'pengajuans', 'suppliers'));
     }
@@ -330,6 +330,9 @@ class PembelianController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pembelian = Pembelian::findOrFail($id);
+        $pembelian->delete();
+        Log::info('Deleting pembelian:', ['id' => $id]);
+        return redirect()->route('pembelian.index')->with('success', 'Pembelian deleted successfully.');
     }
 }

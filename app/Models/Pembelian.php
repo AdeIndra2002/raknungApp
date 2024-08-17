@@ -17,6 +17,11 @@ class Pembelian extends Model
         'verif_by',
     ];
 
+    public function penerimaan()
+    {
+        return $this->hasMany(Penerimaan::class);
+    }
+
     public function pengajuan()
     {
         return $this->belongsTo(Pengajuan::class);
