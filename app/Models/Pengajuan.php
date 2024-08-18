@@ -41,8 +41,13 @@ class Pengajuan extends Model
         return $this->hasMany(PengajuanBarang::class);
     }
 
-    public function Pembelian()
+    public function pembelian()
     {
         return $this->hasMany(Pembelian::class);
+    }
+
+    public function distribusi()
+    {
+        return $this->hasMany(Distribusi::class);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\GambarController;
 use App\Http\Controllers\KategoriController;
@@ -67,6 +68,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('penerimaan', PenerimaanController::class)->middleware(['role:admin|pimpinan|staff']);
     Route::get('/penerimaan/{id}/generate', [PenerimaanController::class, 'generate'])->name('penerimaan.generate');
     Route::get('/cetakSemu', [PenerimaanController::class, 'cetakSemu'])->name('penerimaan.cetakSemu');
+    Route::patch('distribusi/{id}/verify', [DistribusiController::class, 'verify'])->name('distribusi.verif');
+
+    Route::resource('distribusi', DistribusiController::class)->middleware(['role:admin|pimpinan|staff']);
+    Route::patch('distribusi/{distribusi}/verif', [DistribusiController::class, 'verify'])->name('distribusi.verif');
 
 
 

@@ -116,7 +116,6 @@
                     </tbody>
                 </table>
             </p>
-
             <table class="table">
                 <thead>
                     <tr>
@@ -133,7 +132,7 @@
                     @endforeach
                 </tbody>
             </table>
-
+            <p>dengan total harga : <b>Rp {{ number_format($penerimaan->pembelian->total_harga, 0, ',', '.') }}</b></p>
             <p>Demikian lampiran penerimaan barang ini dibuat.</p>
         </div>
 
@@ -147,34 +146,9 @@
                 <br>
                 <p class="text-center align-middle">
                     <b><u>{{ $user }}</u></b>
-
+                    <br><b>Pimpinan</b>
                 </p>
             </div>
-        </div>
-
-        <p class="page-break">Berikut lampiran penerimaan barang yang diterima :</p>
-        <div id="image-supplier-fields">
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-6" for="gambar">Gambar Nota Pembelian</label>
-            @foreach ($penerimaan->pembelian->GambarPembelian as $index => $gambar)
-            <div class="image-supplier-row mb-4 relative" data-index="{{ $index }}">
-                @if($gambar->gambar)
-                <img src="{{ asset('storage/images/' . $gambar->gambar) }}" alt="Gambar Nota" style="width: 300px; height: auto;">
-
-                @endif
-            </div>
-            @endforeach
-        </div>
-        <!-- Gambar penerimaan -->
-        <div id="image-supplier-fields">
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-6" for="gambar">Gambar Penerimaan</label>
-            @foreach ($penerimaan->GambarPenerimaan as $index => $gambar)
-            <div class="image-supplier-row mb-4 relative" data-index="{{ $index }}">
-                @if($gambar->gambar)
-                <img src="{{ asset('storage/images/' . $gambar->gambar) }}" alt="Gambar Nota" style="width: 300px; height: auto;">
-
-                @endif
-            </div>
-            @endforeach
         </div>
     </section>
 </body>

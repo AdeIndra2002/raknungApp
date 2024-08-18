@@ -28,6 +28,10 @@
                 <x-dropdown-link :href="url('/pembelian/' . $notification->data['pembelian'])">
                     {{ $notification->data['message'] }}
                 </x-dropdown-link>
+                @elseif ($notification->type === 'App\Notifications\DistribusiVerified')
+                <x-dropdown-link :href="url('/distribusi/' . $notification->data['distribusi'])">
+                    {{ $notification->data['message'] }}
+                </x-dropdown-link>
                 @endif
             </li>
             @empty

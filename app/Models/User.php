@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pembelian::class, 'verif_by');
     }
+
+    public function distribusiVerifiedBy()
+    {
+        return $this->hasMany(Distribusi::class, 'verif_by');
+    }
 }

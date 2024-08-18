@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang;
 use App\Models\GambarPembelian;
 use App\Models\GambarPenerimaan;
 use App\Models\Pembelian;
@@ -42,11 +43,21 @@ class PenerimaanController extends Controller
         $request->validate([
             'pembelian_id' => 'required|exists:pembelians,id',
             'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stok.*' => 'nullable|integer|min:0'
         ]);
 
         $penerimaan = Penerimaan::create([
             'pembelian_id' => $request->pembelian_id,
         ]);
+
+        // Update stock for each Barang
+        foreach ($request->stok as $barangId => $stok) {
+            if ($stok > 0) {
+                $barang = Barang::find($barangId);
+                $barang->stok += $stok;
+                $barang->save();
+            }
+        }
 
         if ($request->hasFile('gambar')) {
             $images = $request->file('gambar');
@@ -55,14 +66,35 @@ class PenerimaanController extends Controller
                 $imagePath = $image->store('public/images');
                 $imageName = basename($imagePath);
 
-                $gambarPenerimaan = GambarPenerimaan::create([
+                GambarPenerimaan::create([
                     'penerimaan_id' => $penerimaan->id,
                     'gambar' => $imageName,
                 ]);
             }
         }
+
         return redirect()->route('penerimaan.index')->with('success', 'Data penerimaan berhasil di tambahkan.');
     }
+
+    public function getPengajuanDetails($pembelianId)
+    {
+        // Fetch the Pembelian with its associated Pengajuan and PengajuanBarang
+        $pembelian = Pembelian::with('pengajuan.pengajuanBarang.barang')->findOrFail($pembelianId);
+
+        // Get PengajuanBarang related to the Pengajuan of the selected Pembelian
+        $pengajuanBarang = $pembelian->pengajuan->pengajuanBarang;
+
+        // Return the data as JSON response
+        return response()->json([
+            'pengajuanBarang' => $pengajuanBarang->map(function ($item) {
+                return [
+                    'barang' => $item->barang,
+                    'jumlah' => $item->jumlah,
+                ];
+            }),
+        ]);
+    }
+
 
     public function cetakPenerimaan(Request $request)
     {
@@ -79,13 +111,12 @@ class PenerimaanController extends Controller
     public function generate($id)
     {
 
-        $penerimaan = Penerimaan::with('GambarPenerimaan', 'pembelian')->findOrFail($id); // Mengambil data pengajuan berdasarkan ID
-        $gambarPenerimaan = GambarPenerimaan::where('penerimaan_id', $penerimaan->id)->get();
+        $penerimaan = Penerimaan::with('pembelian.pengajuan.divisi', 'pembelian.pengajuan')->findOrFail($id); // Mengambil data pengajuan berdasarkan ID
         $gambarPembelian = GambarPembelian::where('pembelian_id', $penerimaan->pembelian->id)->get();
         $pengajuanBarang = PengajuanBarang::where('pengajuan_id', $penerimaan->pembelian->pengajuan->id)->get();
         $user = User::where('id', 4)->value('name');
 
-        $pdf = Pdf::loadView('penerimaan.lampiran', compact('user', 'penerimaan', 'gambarPenerimaan', 'gambarPembelian', 'pengajuanBarang'));
+        $pdf = Pdf::loadView('penerimaan.lampiran', compact('user', 'penerimaan', 'pengajuanBarang', 'gambarPembelian'));
         return $pdf->stream('lampiran_penerimaan.pdf');
     }
 

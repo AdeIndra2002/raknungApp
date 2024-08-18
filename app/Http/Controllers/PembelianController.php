@@ -150,7 +150,7 @@ class PembelianController extends Controller
     {
         // Validasi input
         $request->validate([
-            'pengajuan_id' => 'required|exists:pengajuans,id',
+            'pengajuan_id' => 'required|exists:pengajuans,id|unique:pengajuans,id',
             'total_harga' => 'required|numeric',
             'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'supplier_id' => 'required|array',

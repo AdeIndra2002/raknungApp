@@ -102,7 +102,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $data->pembelian->pengajuan->nama_pengaju }} - {{ $data->pembelian->pengajuan->divisi->nama_divisi }}</td>
-                        <td>{{ $data->pembelian->total_harga }}</td>
+                        <td>Rp.{{ number_format($data->pembelian->total_harga, 0, ',', '.') }}</td>
                         <td>{{ $data->created_at }}</td>
                     </tr>
                     @endforeach
@@ -139,12 +139,16 @@
                     echo $currentDate;
                     @endphp
                     <br>Mengetahui
+                    <br>
+                    <br>
+                    <p class="text-center align-middle">
+                        <b><u>{{ $user }}</u></b>
+                        <br><b>Pimpinan</b>
+                    </p>
                 </p>
                 <br>
                 <br>
-                <p class="text-center align-middle">
-                    <b><u>{{ $user }}</u></b>
-                </p>
+
             </div>
         </div>
 
